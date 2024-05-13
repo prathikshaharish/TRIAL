@@ -5,7 +5,7 @@ from sklearn.linear_model import LogisticRegression
 
 # Load data function
 def load_data(file_path):
-    data = pd.read_csv('Final_EMG-EEG-ML.csv')
+    data = pd.read_csv(Final_EMG-EEG-ML.csv)
     return data
 
 # Function to apply thresholds to create labels
@@ -41,19 +41,35 @@ if st.button('Show Data'):
 # Apply thresholds to the data
 data_with_pain_status = apply_thresholds(data)
 
-# Machine learning model training
-model = LogisticRegression()
-features = data[['EMG Rest (µV)', 'EMG Flexion (µV)', 'EMG Extension (µV)', 'EEG Rest (µV)', 'EEG Flexion (µV)', 'EEG Extension (µV)']]
-labels = (data['Category'] == 'Pain').astype(int)
-model.fit(features, labels)
+# Check for missing values
+if data_with_pain_status.isnull().values.any():
+    st.write("Warning: There are missing values in the dataset. Please handle them before training the model.")
+else:
+    # Ensure all feature values are numeric
+    feature_columns = ['EMG Rest (µV)', 'EMG Flexion (µV)', 'EMG Extension (µV)', 'EEG Rest (µV)', 'EEG Flexion (µV)', 'EEG Extension (µV)']
+    data_with_pain_status[feature_columns] = data_with_pain_status[feature_columns].apply(pd.to_numeric, errors='coerce')
 
-# User input for prediction
-st.subheader('Predict Pain Status')
-input_data = st.text_input('Enter EMG and EEG values separated by comma (in the order: EMG Rest, EMG Flexion, EMG Extension, EEG Rest, EEG Flexion, EEG Extension):')
-if st.button('Predict'):
-    input_list = list(map(float, input_data.split(',')))
-    prediction = model.predict([input_list])
-    st.write('Pain' if prediction[0] == 1 else 'No Pain')
+    # Check for any remaining non-numeric values
+    if data_with_pain_status[feature_columns].isnull().values.any():
+        st.write("Warning: There are non-numeric values in the features. Please clean the data.")
+    else:
+        # Machine learning model training
+        model = LogisticRegression()
+        features = data_with_pain_status[feature_columns]
+        labels = (data_with_pain_status['Category'] == 'Pain').astype(int)
+        
+        try:
+            model.fit(features, labels)
+        except ValueError as e:
+            st.write(f"Error in model fitting: {e}")
+
+        # User input for prediction
+        st.subheader('Predict Pain Status')
+        input_data = st.text_input('Enter EMG and EEG values separated by comma (in the order: EMG Rest, EMG Flexion, EMG Extension, EEG Rest, EEG Flexion, EEG Extension):')
+        if st.button('Predict'):
+            input_list = list(map(float, input_data.split(',')))
+            prediction = model.predict([input_list])
+            st.write('Pain' if prediction[0] == 1 else 'No Pain')
 
 st.sidebar.header('About')
 st.sidebar.info('This is a Streamlit app for detecting pain based on EMG and EEG readings.')
