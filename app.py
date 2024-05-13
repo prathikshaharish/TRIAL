@@ -53,23 +53,36 @@ else:
     if data_with_pain_status[feature_columns].isnull().values.any():
         st.write("Warning: There are non-numeric values in the features. Please clean the data.")
     else:
-        # Machine learning model training
-        model = LogisticRegression()
-        features = data_with_pain_status[feature_columns]
-        labels = (data_with_pain_status['Category'] == 'Pain').astype(int)
+        # Check the distribution of classes
+        class_counts = data_with_pain_status['Category'].value_counts()
+        st.write("Class distribution:", class_counts)
         
-        try:
-            model.fit(features, labels)
-        except ValueError as e:
-            st.write(f"Error in model fitting: {e}")
+        if len(class_counts) < 2:
+            st.write("Error: The dataset contains only one class. The model cannot be trained.")
+        else:
+            # Machine learning model training
+            model = LogisticRegression()
+            features = data_with_pain_status[feature_columns]
+            labels = (data_with_pain_status['Category'] == 'Pain').astype(int)
+            
+            try:
+                model.fit(features, labels)
+                st.write("Model training completed successfully.")
+            except ValueError as e:
+                st.write(f"Error in model fitting: {e}")
 
-        # User input for prediction
-        st.subheader('Predict Pain Status')
-        input_data = st.text_input('Enter EMG and EEG values separated by comma (in the order: EMG Rest, EMG Flexion, EMG Extension, EEG Rest, EEG Flexion, EEG Extension):')
-        if st.button('Predict'):
-            input_list = list(map(float, input_data.split(',')))
-            prediction = model.predict([input_list])
-            st.write('Pain' if prediction[0] == 1 else 'No Pain')
+            # User input for prediction
+            st.subheader('Predict Pain Status')
+            input_data = st.text_input('Enter EMG and EEG values separated by comma (in the order: EMG Rest, EMG Flexion, EMG Extension, EEG Rest, EEG Flexion, EEG Extension):')
+            if st.button('Predict'):
+                input_list = list(map(float, input_data.split(',')))
+                input_array = np.array(input_list).reshape(1, -1)
+                
+                try:
+                    prediction = model.predict(input_array)
+                    st.write('Pain' if prediction[0] == 1 else 'No Pain')
+                except Exception as e:
+                    st.write(f"Error in prediction: {e}")
 
 st.sidebar.header('About')
 st.sidebar.info('This is a Streamlit app for detecting pain based on EMG and EEG readings.')
