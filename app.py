@@ -50,10 +50,12 @@ def classify_pain_status(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_fle
         return 'Check Values'
 
 # Set up the Streamlit interface
-st.title('EMG-EEG Sensor-Based Exoskeleton for Knee Injury Rehabilitation')
-st.write ('BMS COLLEGE OF ENGINEERING 
-          MAJOR PROJECT VIII SEM')
-st.subheader('By - Prathiksha Harish , Krithik Raj , Prajval Prakash and Dr. Jisha P')
+st.markdown("""
+    <h1 style='text-align: center; font-weight: bold;'>EMG - EEG Sensor-Based Exoskeleton for Knee Injury Rehabilitation</h1>
+    <h3 style='text-align: center;'>BMS COLLEGE OF ENGINEERING</h3>
+    <h3 style='text-align: center;'>MAJOR PROJECT VIII SEM</h3>
+    <h4 style='text-align: center;'>By - Prathiksha Harish, Krithik Raj K, Prajval Prakash, and Dr. Jisha P</h4>
+    """, unsafe_allow_html=True)
 
 # Load and categorize data
 file_path = 'DataSet_Exo-MP.csv'
