@@ -51,7 +51,7 @@ def classify_pain_status(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_fle
 
 # Set up the Streamlit interface
 st.markdown("""
-    <h1 style='text-align: center; font-weight: bold;'>EMG - EEG Sensor-Based Exoskeleton for Knee Injury Rehabilitation</h1>
+    <h1 style='text-align: left; font-weight: bold;'>EMG - EEG Sensor-Based Exoskeleton for Knee Injury Rehabilitation</h1>
     <h3 style='text-align: center;'>BMS COLLEGE OF ENGINEERING</h3>
     <h3 style='text-align: center;'>MAJOR PROJECT VIII SEM</h3>
     <h4 style='text-align: center;'>By - Prathiksha Harish, Krithik Raj K, Prajval Prakash, and Dr. Jisha P</h4>
