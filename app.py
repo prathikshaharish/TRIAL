@@ -4,7 +4,7 @@ from sklearn.linear_model import LogisticRegression
 
 # Load data function
 def load_data(file_path):
-    data = pd.read_excel('Final_EMG-EEG-ML.xlsx')
+    data = pd.read_excel('Final_EMG-EEG-ML.csv')
     return data
 
 # Function to apply thresholds to create labels
@@ -31,7 +31,7 @@ def apply_thresholds(data):
 
 # Set up the Streamlit interface
 st.title('Pain Detection System')
-data = load_data('Final_EMG-EEG-ML.xlsx')
+data = load_data('Final_EMG-EEG-ML.csv')
 
 # Show data and allow user interactions
 if st.button('Show Data'):
