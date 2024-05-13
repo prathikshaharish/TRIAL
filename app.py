@@ -1,12 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import subprocess
-import sys
-import seaborn as sns
-import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
-
 from sklearn.linear_model import LogisticRegression
 
 # Load data function
@@ -35,6 +29,20 @@ def apply_thresholds(data):
     
     data['Category'] = np.select(conditions, choices, default='Check Values')
     return data
+
+# Function to classify the level of pain
+def classify_pain(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension):
+    if (emg_rest > 0.1 or emg_flexion > 2.5 or emg_extension > 3.2 or
+        eeg_rest > 3.0 or eeg_flexion > 7.0 or eeg_extension > 9.0):
+        return 'Very High Pain'
+    elif (emg_rest > 0.05 or emg_flexion > 1.25 or emg_extension > 1.6 or
+          eeg_rest > 1.5 or eeg_flexion > 3.5 or eeg_extension > 4.5):
+        return 'Pain'
+    elif (emg_rest <= 0.02 and emg_flexion <= 0.7 and emg_extension <= 0.8 and
+          eeg_rest <= 0.5 and eeg_flexion <= 1.5 and eeg_extension <= 2.0):
+        return 'No Pain'
+    else:
+        return 'Check Values'
 
 # Set up the Streamlit interface
 st.title('Pain Detection System')
@@ -77,29 +85,24 @@ if st.button('Predict'):
             input_array = np.array(input_list).reshape(1, -1)
             prediction = model.predict(input_array)
             st.write('Pain' if prediction[0] == 1 else 'No Pain')
+            
+            # Additional classification based on ranges
+            emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension = input_list
+            pain_level = classify_pain(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension)
+            st.write(f'Pain Level: {pain_level}')
     except ValueError:
         st.write("Error: Please enter valid numeric values.")
 
-# Plot EEG and EMG data over time for each patient
-st.subheader('Patient Data Visualization')
+# Patient data visualization
+st.subheader('Patient Data Details')
 patient_names = filtered_data['Name'].unique()
-selected_patient = st.selectbox('Select a patient:', patient_names)
+selected_patient = st.selectbox('Select a patient to view details:', patient_names)
 
 if selected_patient:
     patient_data = data[data['Name'] == selected_patient]
     if not patient_data.empty:
-        fig, ax1 = plt.subplots(figsize=(12, 6))
-
-        ax2 = ax1.twinx()
-        sns.lineplot(data=patient_data, x='Time (s)', y='EMG Rest (ÂµV)', ax=ax1, label='EMG Rest (ÂµV)', color='r')
-        sns.lineplot(data=patient_data, x='Time (s)', y='EEG Rest (ÂµV)', ax=ax2, label='EEG Rest (ÂµV)', color='b')
-
-        ax1.set_xlabel('Time (s)')
-        ax1.set_ylabel('EMG Rest (ÂµV)', color='r')
-        ax2.set_ylabel('EEG Rest (ÂµV)', color='b')
-
-        fig.tight_layout()
-        st.pyplot(fig)
+        st.write(f"Details for patient {selected_patient}:")
+        st.write(patient_data)
 
 st.sidebar.header('About')
 st.sidebar.info('This is a Streamlit app for detecting pain based on EMG and EEG readings.')
