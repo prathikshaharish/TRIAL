@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LogisticRegression
 
 # Load data function
 def load_data(file_path):
@@ -31,16 +30,21 @@ def apply_thresholds(data):
     data['Category'] = np.select(conditions, choices, default='Check Values')
     return data
 
-# Function to classify the level of pain
-def classify_pain(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension):
-    if (emg_rest > 0.1 or emg_flexion > 2.5 or emg_extension > 3.2 or
-        eeg_rest > 3.0 or eeg_flexion > 7.0 or eeg_extension > 9.0):
-        return 'Very High Pain'
-    elif (emg_rest > 0.05 or emg_flexion > 1.25 or emg_extension > 1.6 or
-          eeg_rest > 1.5 or eeg_flexion > 3.5 or eeg_extension > 4.5):
+# Function to classify pain status based on provided ranges
+def classify_pain_status(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension):
+    if (emg_rest > 0.05 or 
+        0.7 <= emg_flexion <= 1.25 or 
+        1.0 <= emg_extension <= 1.6 or 
+        eeg_rest > 1.5 or 
+        2.5 <= eeg_flexion <= 3.5 or 
+        3.0 <= eeg_extension <= 4.5):
         return 'Pain'
-    elif (emg_rest <= 0.02 and emg_flexion <= 0.7 and emg_extension <= 0.8 and
-          eeg_rest <= 0.5 and eeg_flexion <= 1.5 and eeg_extension <= 2.0):
+    elif (emg_rest <= 0.02 and 
+          0.3 <= emg_flexion <= 0.7 and 
+          0.4 <= emg_extension <= 0.8 and 
+          eeg_rest <= 0.5 and 
+          1.0 <= eeg_flexion <= 1.5 and 
+          1.0 <= eeg_extension <= 2.0):
         return 'No Pain'
     else:
         return 'Check Values'
@@ -49,7 +53,7 @@ def classify_pain(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, e
 st.title('Pain Detection System')
 
 # Load and categorize data
-file_path = '/mnt/data/DataSet_Exo-MP.csv'
+file_path = 'DataSet_Exo-MP.csv'
 data = load_data(file_path)
 
 # Display the column names
@@ -65,33 +69,6 @@ filtered_data = data_with_pain_status[data_with_pain_status['Category'] != 'Chec
 if st.button('Show Data'):
     st.write(filtered_data)
 
-# Initialize model variable
-model = None
-
-# Check if there are at least two classes present
-class_counts = filtered_data['Category'].value_counts()
-st.write("Class distribution:", class_counts)
-
-if len(class_counts) < 2:
-    st.write("Error: The dataset contains only one class. The model cannot be trained.")
-else:
-    # Machine learning model training
-    model = LogisticRegression()
-    feature_columns = ['EMG Rest (µV)', 'EMG Flexion (µV)', 'EMG Extension (µV)', 'EEG Rest (µV)', 'EEG Flexion (µV)', 'EEG Extension (µV)']
-    features = filtered_data[feature_columns]
-    labels = (filtered_data['Category'] == 'Pain').astype(int)
-
-    # Check for missing values
-    if features.isnull().values.any() or labels.isnull().values.any():
-        st.write("Error: The dataset contains missing values. Please clean the data.")
-    else:
-        try:
-            model.fit(features, labels)
-            st.write("Model training completed successfully.")
-        except ValueError as e:
-            st.write(f"Error in model fitting: {e}")
-            model = None
-
 # User input for prediction
 st.subheader('Predict Pain Status')
 
@@ -104,17 +81,9 @@ eeg_flexion = st.number_input('EEG Flexion (µV)', min_value=0.0, max_value=10.0
 eeg_extension = st.number_input('EEG Extension (µV)', min_value=0.0, max_value=10.0, step=0.01)
 
 if st.button('Predict'):
-    if model is None:
-        st.write("Error: The model has not been trained. Please check the dataset and ensure the model is trained.")
-    else:
-        input_list = [emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension]
-        input_array = np.array(input_list).reshape(1, -1)
-        prediction = model.predict(input_array)
-        st.write('Pain' if prediction[0] == 1 else 'No Pain')
-        
-        # Additional classification based on ranges
-        pain_level = classify_pain(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension)
-        st.write(f'Pain Level: {pain_level}')
+    input_list = [emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension]
+    pain_status = classify_pain_status(*input_list)
+    st.write(f'Pain Status: {pain_status}')
 
 # Patient data visualization
 st.subheader('Patient Data Details')
