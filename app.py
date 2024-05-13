@@ -36,6 +36,11 @@ st.title('Pain Detection System')
 # Load and categorize data
 file_path = '/mnt/data/DataSet_Exo-MP.csv'
 data = load_data(file_path)
+
+# Display the column names
+st.write("Column names in the dataset:", data.columns.tolist())
+
+# Apply thresholds to the data
 data_with_pain_status = apply_thresholds(data)
 
 # Filter out rows with 'Check Values' in 'Category'
