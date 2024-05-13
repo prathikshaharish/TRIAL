@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 # Load data function
-def load_data('DataSet_Exo-MP.csv'):
+def load_data(file_path):
     data = pd.read_csv('DataSet_Exo-MP.csv')
     data.columns = data.columns.str.strip()  # Strip any extra spaces from column names
     return data
