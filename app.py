@@ -6,6 +6,8 @@ from sklearn.linear_model import LogisticRegression
 # Load data function
 def load_data(file_path):
     data = pd.read_csv('DataSet_Exo-MP.csv')
+    # Strip any extra spaces from column names
+    data.columns = data.columns.str.strip()
     return data
 
 # Function to apply thresholds to create labels
@@ -107,6 +109,8 @@ if st.button('Predict'):
             st.write(f'Pain Level: {pain_level}')
     except ValueError:
         st.write("Error: Please enter valid numeric values.")
+    except NameError:
+        st.write("Error: Model not defined. Ensure the model is trained before making predictions.")
 
 # Patient data visualization
 st.subheader('Patient Data Details')
