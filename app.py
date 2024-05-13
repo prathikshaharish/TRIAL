@@ -64,15 +64,29 @@ filtered_data = data_with_pain_status[data_with_pain_status['Category'] != 'Chec
 if st.button('Show Data'):
     st.write(filtered_data)
 
-# Machine learning model training
-model = LogisticRegression()
-# Correctly reference column names including any extra spaces
-feature_columns = ['EMG Rest (µV)', 'EMG Flexion (µV)', 'EMG Extension (µV)', 'EEG Rest (µV)', 'EEG Flexion (µV)', 'EEG Extension (µV)']
-features = filtered_data[feature_columns]
-labels = (filtered_data['Category'] == 'Pain').astype(int)
+# Check if there are at least two classes present
+class_counts = filtered_data['Category'].value_counts()
+st.write("Class distribution:", class_counts)
 
-model.fit(features, labels)
-st.write("Model training completed successfully.")
+if len(class_counts) < 2:
+    st.write("Error: The dataset contains only one class. The model cannot be trained.")
+else:
+    # Machine learning model training
+    model = LogisticRegression()
+    # Correctly reference column names including any extra spaces
+    feature_columns = ['EMG Rest (µV)', 'EMG Flexion (µV)', 'EMG Extension (µV)', 'EEG Rest (µV)', 'EEG Flexion (µV)', 'EEG Extension (µV)']
+    features = filtered_data[feature_columns]
+    labels = (filtered_data['Category'] == 'Pain').astype(int)
+
+    # Check for missing values
+    if features.isnull().values.any() or labels.isnull().values.any():
+        st.write("Error: The dataset contains missing values. Please clean the data.")
+    else:
+        try:
+            model.fit(features, labels)
+            st.write("Model training completed successfully.")
+        except ValueError as e:
+            st.write(f"Error in model fitting: {e}")
 
 # User input for prediction
 st.subheader('Predict Pain Status')
