@@ -66,7 +66,8 @@ if st.button('Show Data'):
 
 # Machine learning model training
 model = LogisticRegression()
-feature_columns = ['EMG Rest (ÂµV)', 'EMG Flexion (ÂµV)', 'EMG Extension (ÂµV)', 'EEG Rest (ÂµV)', 'EEG Flexion (ÂµV)', 'EEG Extension (ÂµV)']
+# Correctly reference column names including any extra spaces
+feature_columns = ['EMG Rest (µV)', 'EMG Flexion (µV)', 'EMG Extension (µV)', 'EEG Rest (µV)', 'EEG Flexion (µV)', 'EEG Extension (µV)']
 features = filtered_data[feature_columns]
 labels = (filtered_data['Category'] == 'Pain').astype(int)
 
