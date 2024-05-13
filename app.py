@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Load data function
 def load_data(file_path):
@@ -10,27 +12,19 @@ def load_data(file_path):
 
 # Function to apply thresholds to create labels
 def apply_thresholds(data):
-    # Ensure column names match exactly
-    emg_rest = 'EMG Rest (µV)'
-    emg_flexion = 'EMG Flexion (µV)'
-    emg_extension = 'EMG Extension (µV)'
-    eeg_rest = 'EEG Rest (µV)'
-    eeg_flexion = 'EEG Flexion (µV)'
-    eeg_extension = 'EEG Extension (µV)'
-
     conditions = [
-        (data[emg_rest] > 0.05) | 
-        (data[emg_flexion] > 1.25) | 
-        (data[emg_extension] > 1.6) |
-        (data[eeg_rest] > 1.5) | 
-        (data[eeg_flexion] > 3.5) | 
-        (data[eeg_extension] > 4.5),
-        (data[emg_rest] <= 0.02) & 
-        (data[emg_flexion] <= 0.7) & 
-        (data[emg_extension] <= 0.8) &
-        (data[eeg_rest] <= 0.5) & 
-        (data[eeg_flexion] <= 1.5) & 
-        (data[eeg_extension] <= 2.0)
+        (data['EMG Rest (ÂµV)'] > 0.05) | 
+        (data['EMG Flexion (ÂµV)'] > 1.25) | 
+        (data['EMG Extension (ÂµV)'] > 1.6) |
+        (data['EEG Rest (ÂµV)'] > 1.5) | 
+        (data['EEG Flexion (ÂµV)'] > 3.5) | 
+        (data['EEG Extension (ÂµV)'] > 4.5),
+        (data['EMG Rest (ÂµV)'] <= 0.02) & 
+        (data['EMG Flexion (ÂµV)'] <= 0.7) & 
+        (data['EMG Extension (ÂµV)'] <= 0.8) &
+        (data['EEG Rest (ÂµV)'] <= 0.5) & 
+        (data['EEG Flexion (ÂµV)'] <= 1.5) & 
+        (data['EEG Extension (ÂµV)'] <= 2.0)
     ]
     
     choices = ['Pain', 'No Pain']
@@ -41,7 +35,7 @@ def apply_thresholds(data):
 # Set up the Streamlit interface
 st.title('Pain Detection System')
 
-# Load and inspect data
+# Load and categorize data
 file_path = '/mnt/data/DataSet_Exo-MP.csv'
 data = load_data(file_path)
 
@@ -67,7 +61,7 @@ if len(class_counts) < 2:
 else:
     # Machine learning model training
     model = LogisticRegression()
-    feature_columns = [emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension]
+    feature_columns = ['EMG Rest (ÂµV)', 'EMG Flexion (ÂµV)', 'EMG Extension (ÂµV)', 'EEG Rest (ÂµV)', 'EEG Flexion (ÂµV)', 'EEG Extension (ÂµV)']
     features = filtered_data[feature_columns]
     labels = (filtered_data['Category'] == 'Pain').astype(int)
 
@@ -88,6 +82,27 @@ else:
                 st.write('Pain' if prediction[0] == 1 else 'No Pain')
         except ValueError:
             st.write("Error: Please enter valid numeric values.")
+
+    # Plot EEG and EMG data over time for each patient
+    st.subheader('Patient Data Visualization')
+    patient_names = filtered_data['Name'].unique()
+    selected_patient = st.selectbox('Select a patient:', patient_names)
+
+    if selected_patient:
+        patient_data = data[data['Name'] == selected_patient]
+        if not patient_data.empty:
+            fig, ax1 = plt.subplots(figsize=(12, 6))
+
+            ax2 = ax1.twinx()
+            sns.lineplot(data=patient_data, x='Time (s)', y='EMG Rest (ÂµV)', ax=ax1, label='EMG Rest (ÂµV)', color='r')
+            sns.lineplot(data=patient_data, x='Time (s)', y='EEG Rest (ÂµV)', ax=ax2, label='EEG Rest (ÂµV)', color='b')
+
+            ax1.set_xlabel('Time (s)')
+            ax1.set_ylabel('EMG Rest (ÂµV)', color='r')
+            ax2.set_ylabel('EEG Rest (ÂµV)', color='b')
+
+            fig.tight_layout()
+            st.pyplot(fig)
 
 st.sidebar.header('About')
 st.sidebar.info('This is a Streamlit app for detecting pain based on EMG and EEG readings.')
