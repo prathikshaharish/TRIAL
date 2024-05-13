@@ -17,7 +17,7 @@ def apply_thresholds(data):
         (data['EEG Rest (µV)'] <= 0.5) & (data['EEG Flexion (µV)'] <= 1.5) & (data['EEG Extension (µV)'] <= 2.0)
     ]
     choices = ['Pain', 'No Pain']
-    data['Pain_Status'] = pd.np.select(conditions, choices, default='Check Values')
+    data['Category'] = pd.np.select(conditions, choices, default='Check Values')
     return data
 
 # Set up the Streamlit interface
@@ -44,7 +44,7 @@ def apply_thresholds(data):
     choices = ['Pain', 'No Pain']
     
     # Apply conditions to the DataFrame
-    data['Pain_Status'] = pd.np.select(conditions, choices, default='Check Values')
+    data['Category'] = pd.np.select(conditions, choices, default='Check Values')
     return data
 
 
