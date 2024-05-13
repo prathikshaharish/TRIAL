@@ -50,7 +50,10 @@ def classify_pain_status(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_fle
         return 'Check Values'
 
 # Set up the Streamlit interface
-st.title('Pain Detection System')
+st.title('EMG-EEG Sensor-Based Exoskeleton for Knee Injury Rehabilitation')
+st.write ("BMS COLLEGE OF ENGINEERING 
+          MAJOR PROJECT VIII SEM')
+st.subheader('By - Prathiksha Harish , Krithik Raj , Prajval Prakash and Dr. Jisha P)
 
 # Load and categorize data
 file_path = 'DataSet_Exo-MP.csv'
