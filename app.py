@@ -5,24 +5,32 @@ from sklearn.linear_model import LogisticRegression
 
 # Load data function
 def load_data(file_path):
-    data = pd.read_csv('Final_EMG-EEG-ML.csv')
+    data = pd.read_csv(file_path)
     return data
 
 # Function to apply thresholds to create labels
 def apply_thresholds(data):
+    # Ensure column names match exactly
+    emg_rest = 'EMG Rest (µV)'
+    emg_flexion = 'EMG Flexion (µV)'
+    emg_extension = 'EMG Extension (µV)'
+    eeg_rest = 'EEG Rest (µV)'
+    eeg_flexion = 'EEG Flexion (µV)'
+    eeg_extension = 'EEG Extension (µV)'
+
     conditions = [
-        (data['EMG Rest (ÂµV)'] > 0.05) | 
-        (data['EMG Flexion (ÂµV)'] > 1.25) | 
-        (data['EMG Extension (ÂµV)'] > 1.6) |
-        (data['EEG Rest (ÂµV)'] > 1.5) | 
-        (data['EEG Flexion (ÂµV)'] > 3.5) | 
-        (data['EEG Extension (ÂµV)'] > 4.5),
-        (data['EMG Rest (ÂµV)'] <= 0.02) & 
-        (data['EMG Flexion (ÂµV)'] <= 0.7) & 
-        (data['EMG Extension (ÂµV)'] <= 0.8) &
-        (data['EEG Rest (ÂµV)'] <= 0.5) & 
-        (data['EEG Flexion (ÂµV)'] <= 1.5) & 
-        (data['EEG Extension (ÂµV)'] <= 2.0)
+        (data[emg_rest] > 0.05) | 
+        (data[emg_flexion] > 1.25) | 
+        (data[emg_extension] > 1.6) |
+        (data[eeg_rest] > 1.5) | 
+        (data[eeg_flexion] > 3.5) | 
+        (data[eeg_extension] > 4.5),
+        (data[emg_rest] <= 0.02) & 
+        (data[emg_flexion] <= 0.7) & 
+        (data[emg_extension] <= 0.8) &
+        (data[eeg_rest] <= 0.5) & 
+        (data[eeg_flexion] <= 1.5) & 
+        (data[eeg_extension] <= 2.0)
     ]
     
     choices = ['Pain', 'No Pain']
@@ -35,6 +43,8 @@ st.title('Pain Detection System')
 
 # Load and categorize data
 data = load_data('/mnt/data/Final_EMG-EEG-ML.csv')
+st.write("Column names in the dataset:", data.columns.tolist())  # Display column names for debugging
+
 data_with_pain_status = apply_thresholds(data)
 
 # Filter out rows with 'Check Values' in 'Category'
@@ -53,7 +63,7 @@ if len(class_counts) < 2:
 else:
     # Machine learning model training
     model = LogisticRegression()
-    feature_columns = ['EMG Rest (ÂµV)', 'EMG Flexion (ÂµV)', 'EMG Extension (ÂµV)', 'EEG Rest (ÂµV)', 'EEG Flexion (ÂµV)', 'EEG Extension (ÂµV)']
+    feature_columns = [emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension]
     features = filtered_data[feature_columns]
     labels = (filtered_data['Category'] == 'Pain').astype(int)
 
