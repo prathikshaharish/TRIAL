@@ -11,18 +11,18 @@ def load_data(file_path):
 # Function to apply thresholds to create labels
 def apply_thresholds(data):
     conditions = [
-        (data['EMG Rest (µV)'] > 0.05) | 
-        (data['EMG Flexion (µV)'] > 1.25) | 
-        (data['EMG Extension (µV)'] > 1.6) |
-        (data['EEG Rest (µV)'] > 1.5) | 
-        (data['EEG Flexion (µV)'] > 3.5) | 
-        (data['EEG Extension (µV)'] > 4.5),
-        (data['EMG Rest (µV)'] <= 0.02) & 
-        (data['EMG Flexion (µV)'] <= 0.7) & 
-        (data['EMG Extension (µV)'] <= 0.8) &
-        (data['EEG Rest (µV)'] <= 0.5) & 
-        (data['EEG Flexion (µV)'] <= 1.5) & 
-        (data['EEG Extension (µV)'] <= 2.0)
+        (data['EMG Rest (ÂµV)'] > 0.05) | 
+        (data['EMG Flexion (ÂµV)'] > 1.25) | 
+        (data['EMG Extension (ÂµV)'] > 1.6) |
+        (data['EEG Rest (ÂµV)'] > 1.5) | 
+        (data['EEG Flexion (ÂµV)'] > 3.5) | 
+        (data['EEG Extension (ÂµV)'] > 4.5),
+        (data['EMG Rest (ÂµV)'] <= 0.02) & 
+        (data['EMG Flexion (ÂµV)'] <= 0.7) & 
+        (data['EMG Extension (ÂµV)'] <= 0.8) &
+        (data['EEG Rest (ÂµV)'] <= 0.5) & 
+        (data['EEG Flexion (ÂµV)'] <= 1.5) & 
+        (data['EEG Extension (ÂµV)'] <= 2.0)
     ]
     
     choices = ['Pain', 'No Pain']
@@ -32,57 +32,48 @@ def apply_thresholds(data):
 
 # Set up the Streamlit interface
 st.title('Pain Detection System')
+
+# Load and categorize data
 data = load_data('/mnt/data/Final_EMG-EEG-ML.csv')
+data_with_pain_status = apply_thresholds(data)
+
+# Filter out rows with 'Check Values' in 'Category'
+filtered_data = data_with_pain_status[data_with_pain_status['Category'] != 'Check Values']
 
 # Show data and allow user interactions
 if st.button('Show Data'):
-    st.write(data)
+    st.write(filtered_data)
 
-# Apply thresholds to the data
-data_with_pain_status = apply_thresholds(data)
+# Check if there are at least two classes present
+class_counts = filtered_data['Category'].value_counts()
+st.write("Class distribution:", class_counts)
 
-# Check for missing values
-if data_with_pain_status.isnull().values.any():
-    st.write("Warning: There are missing values in the dataset. Please handle them before training the model.")
+if len(class_counts) < 2:
+    st.write("Error: The dataset contains only one class. The model cannot be trained.")
 else:
-    # Ensure all feature values are numeric
-    feature_columns = ['EMG Rest (µV)', 'EMG Flexion (µV)', 'EMG Extension (µV)', 'EEG Rest (µV)', 'EEG Flexion (µV)', 'EEG Extension (µV)']
-    data_with_pain_status[feature_columns] = data_with_pain_status[feature_columns].apply(pd.to_numeric, errors='coerce')
+    # Machine learning model training
+    model = LogisticRegression()
+    feature_columns = ['EMG Rest (ÂµV)', 'EMG Flexion (ÂµV)', 'EMG Extension (ÂµV)', 'EEG Rest (ÂµV)', 'EEG Flexion (ÂµV)', 'EEG Extension (ÂµV)']
+    features = filtered_data[feature_columns]
+    labels = (filtered_data['Category'] == 'Pain').astype(int)
 
-    # Check for any remaining non-numeric values
-    if data_with_pain_status[feature_columns].isnull().values.any():
-        st.write("Warning: There are non-numeric values in the features. Please clean the data.")
-    else:
-        # Check the distribution of classes
-        class_counts = data_with_pain_status['Category'].value_counts()
-        st.write("Class distribution:", class_counts)
-        
-        if len(class_counts) < 2:
-            st.write("Error: The dataset contains only one class. The model cannot be trained.")
-        else:
-            # Machine learning model training
-            model = LogisticRegression()
-            features = data_with_pain_status[feature_columns]
-            labels = (data_with_pain_status['Category'] == 'Pain').astype(int)
-            
-            try:
-                model.fit(features, labels)
-                st.write("Model training completed successfully.")
-            except ValueError as e:
-                st.write(f"Error in model fitting: {e}")
+    model.fit(features, labels)
+    st.write("Model training completed successfully.")
 
-            # User input for prediction
-            st.subheader('Predict Pain Status')
-            input_data = st.text_input('Enter EMG and EEG values separated by comma (in the order: EMG Rest, EMG Flexion, EMG Extension, EEG Rest, EEG Flexion, EEG Extension):')
-            if st.button('Predict'):
-                input_list = list(map(float, input_data.split(',')))
+    # User input for prediction
+    st.subheader('Predict Pain Status')
+    input_data = st.text_input('Enter EMG and EEG values separated by comma (in the order: EMG Rest, EMG Flexion, EMG Extension, EEG Rest, EEG Flexion, EEG Extension):')
+    if st.button('Predict'):
+        try:
+            input_list = list(map(float, input_data.split(',')))
+            if len(input_list) != 6:
+                st.write("Error: Please enter exactly 6 values.")
+            else:
                 input_array = np.array(input_list).reshape(1, -1)
-                
-                try:
-                    prediction = model.predict(input_array)
-                    st.write('Pain' if prediction[0] == 1 else 'No Pain')
-                except Exception as e:
-                    st.write(f"Error in prediction: {e}")
+                prediction = model.predict(input_array)
+                st.write('Pain' if prediction[0] == 1 else 'No Pain')
+        except ValueError:
+            st.write("Error: Please enter valid numeric values.")
 
 st.sidebar.header('About')
 st.sidebar.info('This is a Streamlit app for detecting pain based on EMG and EEG readings.')
