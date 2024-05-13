@@ -10,27 +10,19 @@ def load_data(file_path):
 
 # Function to apply thresholds to create labels
 def apply_thresholds(data):
-    # Ensure column names match exactly
-    emg_rest = 'EMG Rest (µV)'
-    emg_flexion = 'EMG Flexion (µV)'
-    emg_extension = 'EMG Extension (µV)'
-    eeg_rest = 'EEG Rest (µV)'
-    eeg_flexion = 'EEG Flexion (µV)'
-    eeg_extension = 'EEG Extension (µV)'
-
     conditions = [
-        (data[emg_rest] > 0.05) | 
-        (data[emg_flexion] > 1.25) | 
-        (data[emg_extension] > 1.6) |
-        (data[eeg_rest] > 1.5) | 
-        (data[eeg_flexion] > 3.5) | 
-        (data[eeg_extension] > 4.5),
-        (data[emg_rest] <= 0.02) & 
-        (data[emg_flexion] <= 0.7) & 
-        (data[emg_extension] <= 0.8) &
-        (data[eeg_rest] <= 0.5) & 
-        (data[eeg_flexion] <= 1.5) & 
-        (data[eeg_extension] <= 2.0)
+        (data['EMG Rest (µV)'] > 0.05) | 
+        (data['EMG Flexion (µV)'] > 1.25) | 
+        (data['EMG Extension (µV)'] > 1.6) |
+        (data['EEG Rest (µV)'] > 1.5) | 
+        (data['EEG Flexion (µV)'] > 3.5) | 
+        (data['EEG Extension (µV)'] > 4.5),
+        (data['EMG Rest (µV)'] <= 0.02) & 
+        (data['EMG Flexion (µV)'] <= 0.7) & 
+        (data['EMG Extension (µV)'] <= 0.8) &
+        (data['EEG Rest (µV)'] <= 0.5) & 
+        (data['EEG Flexion (µV)'] <= 1.5) & 
+        (data['EEG Extension (µV)'] <= 2.0)
     ]
     
     choices = ['Pain', 'No Pain']
@@ -42,9 +34,8 @@ def apply_thresholds(data):
 st.title('Pain Detection System')
 
 # Load and categorize data
-data = load_data('/mnt/data/Final_EMG-EEG-ML.csv')
-st.write("Column names in the dataset:", data.columns.tolist())  # Display column names for debugging
-
+file_path = '/mnt/data/Final_EMG-EEG-ML.csv'
+data = load_data(file_path)
 data_with_pain_status = apply_thresholds(data)
 
 # Filter out rows with 'Check Values' in 'Category'
@@ -63,7 +54,7 @@ if len(class_counts) < 2:
 else:
     # Machine learning model training
     model = LogisticRegression()
-    feature_columns = [emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension]
+    feature_columns = ['EMG Rest (µV)', 'EMG Flexion (µV)', 'EMG Extension (µV)', 'EEG Rest (µV)', 'EEG Flexion (µV)', 'EEG Extension (µV)']
     features = filtered_data[feature_columns]
     labels = (filtered_data['Category'] == 'Pain').astype(int)
 
