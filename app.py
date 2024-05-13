@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 # Load data function
@@ -26,7 +27,7 @@ def apply_thresholds(data):
     
     choices = ['Pain', 'No Pain']
     
-    data['Category'] = pd.select(conditions, choices, default='Check Values')
+    data['Category'] = np.select(conditions, choices, default='Check Values')
     return data
 
 # Set up the Streamlit interface
