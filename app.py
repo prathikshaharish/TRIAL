@@ -5,7 +5,7 @@ from sklearn.linear_model import LogisticRegression
 
 # Load data function
 def load_data(file_path):
-    data = pd.read_csv('')
+    data = pd.read_csv('DataSet_Exo-MP.csv')
     return data
 
 # Function to apply thresholds to create labels
