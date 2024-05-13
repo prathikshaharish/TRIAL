@@ -31,7 +31,7 @@ def apply_thresholds(data):
 
 # Set up the Streamlit interface
 st.title('Pain Detection System')
-data = load_data('/mnt/data/Final_EMG-EEG-ML.xlsx')
+data = load_data('Final_EMG-EEG-ML.xlsx')
 
 # Show data and allow user interactions
 if st.button('Show Data'):
