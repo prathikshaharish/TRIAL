@@ -4,47 +4,25 @@ import numpy as np
 
 # Load data function
 def load_data(file_path):
-    data = pd.read_csv('EDITED DATA SET - Sheet1.csv')
+    data = pd.read_csv(file_path)
     data.columns = data.columns.str.strip()  # Strip any extra spaces from column names
-    return data
-
-# Function to apply thresholds to create labels based on provided ranges
-def apply_thresholds(data):
-    conditions = [
-        (data['EMG Rest (µV)'] > 0.05) | 
-        (data['EMG Flexion (µV)'] > 1.25) | 
-        (data['EMG Extension (µV)'] > 1.6) |
-        (data['EEG Rest (µV)'] > 1.5) | 
-        (data['EEG Flexion (µV)'] > 3.5) | 
-        (data['EEG Extension (µV)'] > 4.5),
-        (data['EMG Rest (µV)'] <= 0.02) & 
-        (data['EMG Flexion (µV)'] <= 0.7) & 
-        (data['EMG Extension (µV)'] <= 0.8) &
-        (data['EEG Rest (µV)'] <= 0.5) & 
-        (data['EEG Flexion (µV)'] <= 1.5) & 
-        (data['EEG Extension (µV)'] <= 2.0)
-    ]
-    
-    choices = ['Pain', 'No Pain']
-    
-    data['Category'] = np.select(conditions, choices, default='Check Values')
     return data
 
 # Function to classify pain status based on provided ranges
 def classify_pain_status(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension):
-    if (emg_rest > 0.05 or 
-        0.7 <= emg_flexion <= 1.25 or 
-        1.0 <= emg_extension <= 1.6 or 
-        eeg_rest > 1.5 or 
-        2.5 <= eeg_flexion <= 3.5 or 
-        3.0 <= eeg_extension <= 4.5):
+    if (0.7501276039 <= emg_rest <= 1.501316884 or 
+        0.997254081 <= emg_flexion <= 3.998466906 or 
+        1.798109079 <= emg_extension <= 3.801380313 or 
+        5.000450261 <= eeg_rest <= 50.18350703 or 
+        60.04197402 <= eeg_flexion <= 86.95405508 or 
+        69.82874585 <= eeg_extension <= 81.92500559):
         return 'Pain'
-    elif (emg_rest <= 0.02 and 
-          0.3 <= emg_flexion <= 0.7 and 
-          0.4 <= emg_extension <= 0.8 and 
-          eeg_rest <= 0.5 and 
-          1.0 <= eeg_flexion <= 1.5 and 
-          1.0 <= eeg_extension <= 2.0):
+    elif (0.497758633 <= emg_rest <= 0.501794274 and 
+          0.8001190203 <= emg_flexion <= 1.999715615 and 
+          0.798152212 <= emg_extension <= 0.803510512 and 
+          2.02509753 <= eeg_rest <= 4.089443689 and 
+          19.87502164 <= eeg_flexion <= 50.08350199 and 
+          49.84258228 <= eeg_extension <= 50.17559819):
         return 'No Pain'
     else:
         return 'Check Values'
@@ -64,35 +42,32 @@ data = load_data(file_path)
 # Display the column names
 st.write("Column names in the dataset:", data.columns.tolist())
 
-# Apply thresholds to the data
-data_with_pain_status = apply_thresholds(data)
-
-# Filter out rows with 'Check Values' in 'Category'
-filtered_data = data_with_pain_status[data_with_pain_status['Category'] != 'Check Values']
-
 # Show data and allow user interactions
 if st.button('Show Data'):
-    st.write(filtered_data)
+    st.write(data)
 
 # User input for prediction
 st.subheader('Predict Pain Status')
 
-# Define input fields for EMG and EEG values
-emg_rest = st.number_input('EMG Rest (µV)', min_value=0.0, max_value=5.0, step=0.01)
-emg_flexion = st.number_input('EMG Flexion (µV)', min_value=0.0, max_value=5.0, step=0.01)
-emg_extension = st.number_input('EMG Extension (µV)', min_value=0.0, max_value=5.0, step=0.01)
-eeg_rest = st.number_input('EEG Rest (µV)', min_value=0.0, max_value=10.0, step=0.01)
-eeg_flexion = st.number_input('EEG Flexion (µV)', min_value=0.0, max_value=10.0, step=0.01)
-eeg_extension = st.number_input('EEG Extension (µV)', min_value=0.0, max_value=10.0, step=0.01)
+# Define input fields for EMG and EEG values with validation
+emg_rest = st.number_input('EMG Rest (µV)', min_value=0.0, max_value=100.0, step=0.01)
+emg_flexion = st.number_input('EMG Flexion (µV)', min_value=0.0, max_value=100.0, step=0.01)
+emg_extension = st.number_input('EMG Extension (µV)', min_value=0.0, max_value=100.0, step=0.01)
+eeg_rest = st.number_input('EEG Rest (µV)', min_value=0.0, max_value=100.0, step=0.01)
+eeg_flexion = st.number_input('EEG Flexion (µV)', min_value=0.0, max_value=100.0, step=0.01)
+eeg_extension = st.number_input('EEG Extension (µV)', min_value=0.0, max_value=100.0, step=0.01)
 
 if st.button('Predict'):
     input_list = [emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension]
-    pain_status = classify_pain_status(*input_list)
-    st.write(f'Pain Status: {pain_status}')
+    if any(val > 100 for val in input_list):
+        st.write('Error: All input values must be 100 or less.')
+    else:
+        pain_status = classify_pain_status(*input_list)
+        st.write(f'Pain Status: {pain_status}')
 
 # Patient data visualization
 st.subheader('Patient Data Details')
-patient_names = filtered_data['Name'].unique()
+patient_names = data['Name'].unique()
 selected_patient = st.selectbox('Select a patient to view details:', patient_names)
 
 if selected_patient:
@@ -106,4 +81,4 @@ st.sidebar.info('This is a Streamlit app for detecting pain based on EMG and EEG
 
 # Display processed data
 if st.button('Show Processed Data'):
-    st.write(data_with_pain_status)
+    st.write(data)
