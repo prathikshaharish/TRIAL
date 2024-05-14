@@ -50,34 +50,76 @@ if st.button('Show Data'):
 st.subheader('Predict Pain Status')
 
 # Define input fields for EMG and EEG values with validation
-emg_rest = st.number_input('EMG Rest (µV)', min_value=0.0, max_value=100.0, step=0.01)
-emg_flexion = st.number_input('EMG Flexion (µV)', min_value=0.0, max_value=100.0, step=0.01)
-emg_extension = st.number_input('EMG Extension (µV)', min_value=0.0, max_value=100.0, step=0.01)
-eeg_rest = st.number_input('EEG Rest (µV)', min_value=0.0, max_value=100.0, step=0.01)
-eeg_flexion = st.number_input('EEG Flexion (µV)', min_value=0.0, max_value=100.0, step=0.01)
-eeg_extension = st.number_input('EEG Extension (µV)', min_value=0.0, max_value=100.0, step=0.01)
+emg_rest = st.number_input('EMG Rest (µV)', min_value=0.0, max_value=1.501316884, step=0.01)
+emg_flexion = st.number_input('EMG Flexion (µV)', min_value=0.0, max_value=3.998466906, step=0.01)
+emg_extension = st.number_input('EMG Extension (µV)', min_value=0.0, max_value=3.801380313, step=0.01)
+eeg_rest = st.number_input('EEG Rest (µV)', min_value=0.0, max_value=50.18350703, step=0.01)
+eeg_flexion = st.number_input('EEG Flexion (µV)', min_value=0.0, max_value=86.95405508, step=0.01)
+eeg_extension = st.number_input('EEG Extension (µV)', min_value=0.0, max_value=81.92500559, step=0.01)
 
 if st.button('Predict'):
     input_list = [emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension]
-    if any(val > 100 for val in input_list):
-        st.write('Error: All input values must be 100 or less.')
+    if any([
+        emg_rest > 1.501316884,
+        emg_flexion > 3.998466906,
+        emg_extension > 3.801380313,
+        eeg_rest > 50.18350703,
+        eeg_flexion > 86.95405508,
+        eeg_extension > 81.92500559
+    ]):
+        st.write('Error: One or more input values exceed the maximum allowed value.')
     else:
         pain_status = classify_pain_status(*input_list)
         st.write(f'Pain Status: {pain_status}')
 
 # Patient data visualization
 st.subheader('Patient Data Details')
-patient_names = data['Name'].unique()
-selected_patient = st.selectbox('Select a patient to view details:', patient_names)
+patient_ids = data['Patient ID'].unique()
+selected_patient = st.selectbox('Select a patient to view details:', patient_ids)
 
 if selected_patient:
-    patient_data = data[data['Name'] == selected_patient]
+    patient_data = data[data['Patient ID'] == selected_patient]
     if not patient_data.empty:
         st.write(f"Details for patient {selected_patient}:")
         st.write(patient_data)
 
 st.sidebar.header('About')
 st.sidebar.info('This is a Streamlit app for detecting pain based on EMG and EEG readings.')
+
+st.sidebar.markdown("""
+This model can be highly beneficial for doctors overseeing the rehabilitation of patients post-knee surgery in several ways:_
+
+1. _**Objective Pain Assessment:**_
+   - **Consistent Monitoring:** By using EMG and EEG sensors to continuously monitor muscle and brain activity, the model provides consistent and objective assessments of the patient's pain levels. This removes subjectivity from the process and allows for more accurate tracking of the patient's progress.
+   - **Real-Time Feedback:** Doctors can get real-time feedback on the patient’s pain levels during rehabilitation exercises. This allows for immediate adjustments to the rehabilitation program to ensure that exercises are beneficial and not causing excessive pain or stress.
+
+2. _**Personalized Rehabilitation Programs:**_
+   - **Tailored Interventions:** The data collected and analyzed by the model can help doctors create personalized rehabilitation programs. By understanding the specific pain thresholds and responses of each patient, doctors can design exercises that are both effective and comfortable.
+   - **Adaptive Therapy:** The model can help identify which exercises cause pain and which ones are more tolerable. This information can be used to adapt the rehabilitation program dynamically, ensuring that the patient remains engaged and motivated without experiencing undue pain.
+
+3. _**Enhanced Patient Monitoring:**_
+   - **Detailed Tracking:** The model provides a detailed record of the patient's EMG and EEG readings over time. This can be used to track improvements or setbacks in the patient’s condition, offering a comprehensive view of their rehabilitation journey.
+   - **Early Detection of Complications:** By continuously monitoring pain levels and muscle activity, the model can help detect any signs of complications early. This can prompt timely interventions and potentially prevent more severe issues from developing.
+
+4. _**Data-Driven Decisions:**_
+   - **Evidence-Based Adjustments:** The model provides data-driven insights that can support clinical decisions. Doctors can use the collected data to adjust rehabilitation protocols based on empirical evidence rather than intuition alone.
+   - **Outcome Measurement:** The effectiveness of different rehabilitation techniques can be quantitatively measured, allowing for evidence-based evaluations of various approaches. This can lead to the refinement of best practices in post-surgery knee rehabilitation.
+
+5. _**Patient Engagement and Motivation:**_
+   - **Transparent Progress:** Patients can be shown their progress through visualizations of their EMG and EEG data. Seeing concrete evidence of their improvement can be highly motivating and encourage adherence to the rehabilitation program.
+   - **Empowerment:** Patients are empowered by understanding the impact of their efforts. This can lead to increased compliance with prescribed exercises and a more proactive approach to their own recovery.
+
+6. _**Research and Development:**_
+   - **New Insights:** The data collected can contribute to research in the field of rehabilitation. Analyzing trends and patterns across multiple patients can lead to new insights into pain management and recovery processes.
+   - **Innovation:** Continuous monitoring and data collection can drive innovation in rehabilitation techniques and technologies. Insights gained can inform the development of new therapeutic devices and protocols.
+
+### _**Implementation in Clinical Settings:**_
+To effectively implement this model in clinical settings, the following steps can be taken:
+- **Integration with Existing Systems:** Ensure the model and sensors can integrate seamlessly with the hospital’s electronic health records (EHR) and other monitoring systems.
+- **Training for Medical Staff:** Provide training for doctors, physiotherapists, and other medical staff on how to use the system, interpret the data, and incorporate it into patient care.
+- **Patient Education:** Educate patients on the importance of continuous monitoring and how it will benefit their recovery.
+- **Feedback Loop:** Establish a feedback loop where data from the model is regularly reviewed and used to make informed decisions about the patient’s rehabilitation plan.
+""", unsafe_allow_html=True)
 
 # Display processed data
 if st.button('Show Processed Data'):
