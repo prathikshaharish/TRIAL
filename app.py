@@ -4,7 +4,7 @@ import numpy as np
 
 # Load data function
 def load_data(file_path):
-    data = pd.read_csv(file_path)
+    data = pd.read_csv('EDITED DATA SET - Sheet1.csv')
     data.columns = data.columns.str.strip()  # Strip any extra spaces from column names
     return data
 
