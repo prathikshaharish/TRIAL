@@ -10,11 +10,11 @@ def load_data(file_path):
 
 # Function to classify pain status based on provided ranges
 def classify_pain_status(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_flexion, eeg_extension):
-    if (0.7501276039 <= emg_rest <= 1.501316884 or 
-        0.997254081 <= emg_flexion <= 3.998466906 or 
-        1.798109079 <= emg_extension <= 3.801380313 or 
-        5.000450261 <= eeg_rest <= 50.18350703 or 
-        60.04197402 <= eeg_flexion <= 86.95405508 or 
+    if (0.7501276039 <= emg_rest <= 1.501316884 and 
+        0.997254081 <= emg_flexion <= 3.998466906 and 
+        1.798109079 <= emg_extension <= 3.801380313 and 
+        5.000450261 <= eeg_rest <= 50.18350703 and 
+        60.04197402 <= eeg_flexion <= 86.95405508 and 
         69.82874585 <= eeg_extension <= 81.92500559):
         return 'Pain'
     elif (0.497758633 <= emg_rest <= 0.501794274 and 
