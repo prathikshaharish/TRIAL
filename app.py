@@ -74,20 +74,17 @@ if st.button('Predict'):
 
 # Patient data visualization
 st.subheader('Patient Data Details')
-patient_ids = data['Patient ID'].unique()
+patient_ids = data['Patient_ID'].unique()
 selected_patient = st.selectbox('Select a patient to view details:', patient_ids)
 
 if selected_patient:
-    patient_data = data[data['Patient ID'] == selected_patient]
+    patient_data = data[data['Patient_ID'] == selected_patient]
     if not patient_data.empty:
         st.write(f"Details for patient {selected_patient}:")
         st.write(patient_data)
 
 st.sidebar.header('About')
-st.sidebar.info('This is a Streamlit app for detecting pain based on EMG and EEG readings.')
-
-st.sidebar.markdown("""
-This model can be highly beneficial for doctors overseeing the rehabilitation of patients post-knee surgery in several ways:_
+st.sidebar.info('This model can be highly beneficial for doctors overseeing the rehabilitation of patients post-knee surgery in several ways:_
 
 1. _**Objective Pain Assessment:**_
    - **Consistent Monitoring:** By using EMG and EEG sensors to continuously monitor muscle and brain activity, the model provides consistent and objective assessments of the patient's pain levels. This removes subjectivity from the process and allows for more accurate tracking of the patient's progress.
@@ -111,15 +108,9 @@ This model can be highly beneficial for doctors overseeing the rehabilitation of
 
 6. _**Research and Development:**_
    - **New Insights:** The data collected can contribute to research in the field of rehabilitation. Analyzing trends and patterns across multiple patients can lead to new insights into pain management and recovery processes.
-   - **Innovation:** Continuous monitoring and data collection can drive innovation in rehabilitation techniques and technologies. Insights gained can inform the development of new therapeutic devices and protocols.
+   - **Innovation:** Continuous monitoring and data collection can drive innovation in rehabilitation techniques and technologies. Insights gained can inform the development of new therapeutic devices and protocols.')
 
-### _**Implementation in Clinical Settings:**_
-To effectively implement this model in clinical settings, the following steps can be taken:
-- **Integration with Existing Systems:** Ensure the model and sensors can integrate seamlessly with the hospital’s electronic health records (EHR) and other monitoring systems.
-- **Training for Medical Staff:** Provide training for doctors, physiotherapists, and other medical staff on how to use the system, interpret the data, and incorporate it into patient care.
-- **Patient Education:** Educate patients on the importance of continuous monitoring and how it will benefit their recovery.
-- **Feedback Loop:** Establish a feedback loop where data from the model is regularly reviewed and used to make informed decisions about the patient’s rehabilitation plan.
-""", unsafe_allow_html=True)
+
 
 # Display processed data
 if st.button('Show Processed Data'):
