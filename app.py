@@ -84,7 +84,22 @@ if selected_patient:
         st.write(patient_data)
 
 st.sidebar.header('About')
-st.sidebar.info('This model will be running real-time very soon! Stay tuned :D')
+st.sidebar.info('This model will be running real-time very soon! Stay tuned /n 
+NO PAIN RANGES - 
+EMG Rest (µV) ranges from  0.497758633 to 0.501794274
+EMG Flexion (µV) 0.8001190203 to 1.999715615
+EMG Extension (µV)  0.798152212 to 0.803510512
+EEG Rest (µV) 2.02509753 to 4.089443689
+EEG Flexion (µV) from 19.87502164 to 50.08350199
+EEG Extension (µV) from 49.84258228 to 50.17559819
+
+PAIN RANGES 
+EMG Rest (µV) 0.7501276039 TO 1.501316884
+EMG Flexion (µV) 0.997254081 TO 3.998466906
+EMG Extension (µV) 1.798109079 TO 3.801380313
+EEG Rest (µV)5.000450261 TO 50.18350703
+EEG Flexion (µV) 60.04197402 TO 86.95405508
+EEG Extension (µV) 69.82874585 TO 81.92500559')
 
 # Display processed data
 if st.button('Show Processed Data'):
