@@ -84,22 +84,61 @@ if selected_patient:
         st.write(patient_data)
 
 st.sidebar.header('About')
-st.sidebar.info('This model will be running real-time very soon! Stay tuned /n 
-NO PAIN RANGES - 
-EMG Rest (µV) ranges from  0.497758633 to 0.501794274
-EMG Flexion (µV) 0.8001190203 to 1.999715615
-EMG Extension (µV)  0.798152212 to 0.803510512
-EEG Rest (µV) 2.02509753 to 4.089443689
-EEG Flexion (µV) from 19.87502164 to 50.08350199
-EEG Extension (µV) from 49.84258228 to 50.17559819
+st.sidebar.info('This model will be running real-time very soon! Stay tuned')
 
-PAIN RANGES 
-EMG Rest (µV) 0.7501276039 TO 1.501316884
-EMG Flexion (µV) 0.997254081 TO 3.998466906
-EMG Extension (µV) 1.798109079 TO 3.801380313
-EEG Rest (µV)5.000450261 TO 50.18350703
-EEG Flexion (µV) 60.04197402 TO 86.95405508
-EEG Extension (µV) 69.82874585 TO 81.92500559')
+st.sidebar.markdown("""
+### _**NO PAIN RANGES:**_
+
+- **EMG Rest (µV):** 0.497758633 to 0.501794274
+- **EMG Flexion (µV):** 0.8001190203 to 1.999715615
+- **EMG Extension (µV):** 0.798152212 to 0.803510512
+- **EEG Rest (µV):** 2.02509753 to 4.089443689
+- **EEG Flexion (µV):** 19.87502164 to 50.08350199
+- **EEG Extension (µV):** 49.84258228 to 50.17559819
+
+### _**PAIN RANGES:**_
+
+- **EMG Rest (µV):** 0.7501276039 to 1.501316884
+- **EMG Flexion (µV):** 0.997254081 to 3.998466906
+- **EMG Extension (µV):** 1.798109079 to 3.801380313
+- **EEG Rest (µV):** 5.000450261 to 50.18350703
+- **EEG Flexion (µV):** 60.04197402 to 86.95405508
+- **EEG Extension (µV):** 69.82874585 to 81.92500559
+
+### _**Benefits for Doctors:**_
+
+1. _**Objective Pain Assessment:**_
+   - **Consistent Monitoring:** By using EMG and EEG sensors to continuously monitor muscle and brain activity, the model provides consistent and objective assessments of the patient's pain levels. This removes subjectivity from the process and allows for more accurate tracking of the patient's progress.
+   - **Real-Time Feedback:** Doctors can get real-time feedback on the patient’s pain levels during rehabilitation exercises. This allows for immediate adjustments to the rehabilitation program to ensure that exercises are beneficial and not causing excessive pain or stress.
+
+2. _**Personalized Rehabilitation Programs:**_
+   - **Tailored Interventions:** The data collected and analyzed by the model can help doctors create personalized rehabilitation programs. By understanding the specific pain thresholds and responses of each patient, doctors can design exercises that are both effective and comfortable.
+   - **Adaptive Therapy:** The model can help identify which exercises cause pain and which ones are more tolerable. This information can be used to adapt the rehabilitation program dynamically, ensuring that the patient remains engaged and motivated without experiencing undue pain.
+
+3. _**Enhanced Patient Monitoring:**_
+   - **Detailed Tracking:** The model provides a detailed record of the patient's EMG and EEG readings over time. This can be used to track improvements or setbacks in the patient’s condition, offering a comprehensive view of their rehabilitation journey.
+   - **Early Detection of Complications:** By continuously monitoring pain levels and muscle activity, the model can help detect any signs of complications early. This can prompt timely interventions and potentially prevent more severe issues from developing.
+
+4. _**Data-Driven Decisions:**_
+   - **Evidence-Based Adjustments:** The model provides data-driven insights that can support clinical decisions. Doctors can use the collected data to adjust rehabilitation protocols based on empirical evidence rather than intuition alone.
+   - **Outcome Measurement:** The effectiveness of different rehabilitation techniques can be quantitatively measured, allowing for evidence-based evaluations of various approaches. This can lead to the refinement of best practices in post-surgery knee rehabilitation.
+
+5. _**Patient Engagement and Motivation:**_
+   - **Transparent Progress:** Patients can be shown their progress through visualizations of their EMG and EEG data. Seeing concrete evidence of their improvement can be highly motivating and encourage adherence to the rehabilitation program.
+   - **Empowerment:** Patients are empowered by understanding the impact of their efforts. This can lead to increased compliance with prescribed exercises and a more proactive approach to their own recovery.
+
+6. _**Research and Development:**_
+   - **New Insights:** The data collected can contribute to research in the field of rehabilitation. Analyzing trends and patterns across multiple patients can lead to new insights into pain management and recovery processes.
+   - **Innovation:** Continuous monitoring and data collection can drive innovation in rehabilitation techniques and technologies. Insights gained can inform the development of new therapeutic devices and protocols.
+
+### _**Implementation in Clinical Settings:**_
+
+To effectively implement this model in clinical settings, the following steps can be taken:
+- **Integration with Existing Systems:** Ensure the model and sensors can integrate seamlessly with the hospital’s electronic health records (EHR) and other monitoring systems.
+- **Training for Medical Staff:** Provide training for doctors, physiotherapists, and other medical staff on how to use the system, interpret the data, and incorporate it into patient care.
+- **Patient Education:** Educate patients on the importance of continuous monitoring and how it will benefit their recovery.
+- **Feedback Loop:** Establish a feedback loop where data from the model is regularly reviewed and used to make informed decisions about the patient’s rehabilitation plan.
+""", unsafe_allow_html=True)
 
 # Display processed data
 if st.button('Show Processed Data'):
