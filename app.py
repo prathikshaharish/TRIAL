@@ -4,11 +4,11 @@ import numpy as np
 
 # Load data function
 def load_data(file_path):
-    data = pd.read_csv('DataSet_Exo-MP.csv')
+    data = pd.read_csv('EDITED DATA SET - Sheet1.csv')
     data.columns = data.columns.str.strip()  # Strip any extra spaces from column names
     return data
 
-# Function to apply thresholds to create labels
+# Function to apply thresholds to create labels based on provided ranges
 def apply_thresholds(data):
     conditions = [
         (data['EMG Rest (µV)'] > 0.05) | 
@@ -51,14 +51,14 @@ def classify_pain_status(emg_rest, emg_flexion, emg_extension, eeg_rest, eeg_fle
 
 # Set up the Streamlit interface
 st.markdown("""
-    <h1 style='text-align: center; font-weight: bold;'>EMG - EEG Sensor-Based Exoskeleton for Knee Injury Rehabilitation</h2>
+    <h1 style='text-align: center; font-weight: bold;'>EMG - EEG Sensor-Based Exoskeleton for Knee Injury Rehabilitation</h1>
     <h3 style='text-align: center;'>BMS COLLEGE OF ENGINEERING</h3>
     <h3 style='text-align: center;'>MAJOR PROJECT VIII SEM</h3>
     <h4 style='text-align: center;'>By - Prathiksha Harish, Krithik Raj K, Prajval Prakash, and Dr. Jisha P</h4>
     """, unsafe_allow_html=True)
 
 # Load and categorize data
-file_path = 'DataSet_Exo-MP.csv'
+file_path = '/mnt/data/EDITED DATA SET - Sheet1.csv'
 data = load_data(file_path)
 
 # Display the column names
