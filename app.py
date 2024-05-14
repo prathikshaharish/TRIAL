@@ -84,33 +84,7 @@ if selected_patient:
         st.write(patient_data)
 
 st.sidebar.header('About')
-st.sidebar.info('This model can be highly beneficial for doctors overseeing the rehabilitation of patients post-knee surgery in several ways:_
-
-1. _**Objective Pain Assessment:**_
-   - **Consistent Monitoring:** By using EMG and EEG sensors to continuously monitor muscle and brain activity, the model provides consistent and objective assessments of the patient's pain levels. This removes subjectivity from the process and allows for more accurate tracking of the patient's progress.
-   - **Real-Time Feedback:** Doctors can get real-time feedback on the patient’s pain levels during rehabilitation exercises. This allows for immediate adjustments to the rehabilitation program to ensure that exercises are beneficial and not causing excessive pain or stress.
-
-2. _**Personalized Rehabilitation Programs:**_
-   - **Tailored Interventions:** The data collected and analyzed by the model can help doctors create personalized rehabilitation programs. By understanding the specific pain thresholds and responses of each patient, doctors can design exercises that are both effective and comfortable.
-   - **Adaptive Therapy:** The model can help identify which exercises cause pain and which ones are more tolerable. This information can be used to adapt the rehabilitation program dynamically, ensuring that the patient remains engaged and motivated without experiencing undue pain.
-
-3. _**Enhanced Patient Monitoring:**_
-   - **Detailed Tracking:** The model provides a detailed record of the patient's EMG and EEG readings over time. This can be used to track improvements or setbacks in the patient’s condition, offering a comprehensive view of their rehabilitation journey.
-   - **Early Detection of Complications:** By continuously monitoring pain levels and muscle activity, the model can help detect any signs of complications early. This can prompt timely interventions and potentially prevent more severe issues from developing.
-
-4. _**Data-Driven Decisions:**_
-   - **Evidence-Based Adjustments:** The model provides data-driven insights that can support clinical decisions. Doctors can use the collected data to adjust rehabilitation protocols based on empirical evidence rather than intuition alone.
-   - **Outcome Measurement:** The effectiveness of different rehabilitation techniques can be quantitatively measured, allowing for evidence-based evaluations of various approaches. This can lead to the refinement of best practices in post-surgery knee rehabilitation.
-
-5. _**Patient Engagement and Motivation:**_
-   - **Transparent Progress:** Patients can be shown their progress through visualizations of their EMG and EEG data. Seeing concrete evidence of their improvement can be highly motivating and encourage adherence to the rehabilitation program.
-   - **Empowerment:** Patients are empowered by understanding the impact of their efforts. This can lead to increased compliance with prescribed exercises and a more proactive approach to their own recovery.
-
-6. _**Research and Development:**_
-   - **New Insights:** The data collected can contribute to research in the field of rehabilitation. Analyzing trends and patterns across multiple patients can lead to new insights into pain management and recovery processes.
-   - **Innovation:** Continuous monitoring and data collection can drive innovation in rehabilitation techniques and technologies. Insights gained can inform the development of new therapeutic devices and protocols.')
-
-
+st.sidebar.info('This model will be running real-time very soon! Stay tuned :D')
 
 # Display processed data
 if st.button('Show Processed Data'):
