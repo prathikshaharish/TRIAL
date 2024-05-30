@@ -61,7 +61,7 @@ if st.button("Predict"):
         st.write(f"{key}: {value}")
 
 if uploaded_file:
-    st.write("### Uploaded Dataset:")
+    st.write("uploaded_file")
     st.dataframe(df)
 
     st.subheader('Patient Data Details')
