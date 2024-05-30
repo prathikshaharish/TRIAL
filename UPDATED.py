@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Load dataset
-uploaded_file = st.file_uploader("Choose an Excel file", type="xlsx")
+uploaded_file = st.file_uploader("EDITED DATA SET.xlsx", type="xlsx")
 if uploaded_file:
     df = pd.read_excel(uploaded_file)
     st.write("Column names in the dataset:", df.columns.tolist())
