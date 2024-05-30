@@ -61,7 +61,7 @@ if st.button("Predict"):
         st.write(f"{key}: {value}")
 
 if uploaded_file:
-    st.write("EDITED DATA SET.xlsx")
+    st.write("### Uploaded Dataset:")
     st.dataframe(df)
 
     st.subheader('Patient Data Details')
@@ -126,5 +126,3 @@ st.sidebar.markdown("""
 
 To effectively implement this model in clinical settings, the following steps can be taken:
 - **Integration with Existing Systems:** Ensure the model and sensors can integrate seamlessly with the hospital’s electronic health records (EHR) and other monitoring systems.
-- **Training for Medical Staff:** Provide training for doctors, physiotherapists, and other medical staff on how to use the system, interpret the data, and incorporate it into patient care.
-- **Patient Education:** Educate patients on the importance of continuous monitoring and how it will benefit their recovery. 
