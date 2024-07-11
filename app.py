@@ -124,5 +124,6 @@ st.sidebar.markdown("""
 
 5. _**Patient Engagement and Motivation:**_
    - **Transparent Progress:** Patients can be shown their progress through visualizations of their EMG and EEG data. Seeing concrete evidence of their improvement can be highly motivating and encourage adherence to the rehabilitation program.
-   - **Empowerment:** Patients are empowered by understanding the impact of their efforts. This can lead to increased compliance with prescribed exercises and a more proactive approach to their own recovery.
+   - **Empowerment:** Patients are empowered by understanding the impact of their efforts. This can lead to increased compliance with prescribed exercises and a more proactive approach to their own recovery. "", unsafe_allow_html=True)
+
 
