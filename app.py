@@ -1,29 +1,20 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 
 # Load dataset
-uploaded_file = st.file_uploader("Upload EDITED DATA SET.xlsx", type="xlsx")
+uploaded_file = st.file_uploader("EDITED DATA SET - EXO.xlsx", type="xlsx")
 if uploaded_file:
     df = pd.read_excel(uploaded_file)
     st.write("Column names in the dataset:", df.columns.tolist())
 
-    # Interactive visualization
-    st.subheader('Interactive Data Visualization')
-    fig = px.scatter(df, x='EMG Rest (µV)', y='EEG Rest (µV)', color='Category', title='EMG Rest vs EEG Rest')
-    st.plotly_chart(fig)
-
-    fig = px.histogram(df, x='EEG Flexion (µV)', color='Category', title='EEG Flexion Distribution')
-    st.plotly_chart(fig)
-
 # Define the threshold ranges
 thresholds = {
-    "EMG Rest": {"Pain": (0.7501276039, 1.501316884), "No Pain": (0.497758633, 0.501794274)},
-    "EMG Flexion": {"Pain": (0.997254081, 3.998466906), "No Pain": (0.8001190203, 1.999715615)},
-    "EMG Extension": {"Pain": (1.798109079, 3.801380313), "No Pain": (0.798152212, 0.803510512)},
-    "EEG Rest": {"Pain": (5.000450261, 50.18350703), "No Pain": (2.02509753, 4.089443689)},
-    "EEG Flexion": {"Pain": (60.04197402, 86.95405508), "No Pain": (19.87502164, 50.08350199)},
-    "EEG Extension": {"Pain": (69.82874585, 81.92500559), "No Pain": (49.84258228, 50.17559819)},
+    "EMG Rest": {"Pain": (0.05, float("inf")), "No Pain": (-float("inf"), 0.02)},
+    "EMG Flexion": {"Pain": (0.7, 1.25), "No Pain": (0.3, 0.7)},
+    "EMG Extension": {"Pain": (1.0, 1.6), "No Pain": (0.4, 0.8)},
+    "EEG Rest": {"Pain": (1.5, float("inf")), "No Pain": (-float("inf"), 0.5)},
+    "EEG Flexion": {"Pain": (2.5, 3.5), "No Pain": (1.0, 1.5)},
+    "EEG Extension": {"Pain": (3.0, 4.5), "No Pain": (1.0, 2.0)},
 }
 
 def classify_value(value, threshold):
@@ -70,7 +61,7 @@ if st.button("Predict"):
         st.write(f"{key}: {value}")
 
 if uploaded_file:
-    st.write("uploaded_file")
+    st.write("### Uploaded Dataset:")
     st.dataframe(df)
 
     st.subheader('Patient Data Details')
@@ -82,37 +73,3 @@ if uploaded_file:
         if not patient_data.empty:
             st.write(f"Details for patient {selected_patient}:")
             st.write(patient_data)
-
-st.sidebar.header('About')
-st.sidebar.info('This model will be running real-time very soon! Stay tuned')
-
-st.sidebar.markdown("""
-### _**NO PAIN RANGES:**_
-
-- **EMG Rest (µV):** 0.497758633 to 0.501794274
-- **EMG Flexion (µV):** 0.8001190203 to 1.999715615
-- **EMG Extension (µV):** 0.798152212 to 0.803510512
-- **EEG Rest (µV):** 2.02509753 to 4.089443689
-- **EEG Flexion (µV):** 19.87502164 to 50.08350199
-- **EEG Extension (µV):** 49.84258228 to 50.17559819
-
-### _**PAIN RANGES:**_
-
-- **EMG Rest (µV):** 0.7501276039 to 1.501316884
-- **EMG Flexion (µV):** 0.997254081 to 3.998466906
-- **EMG Extension (µV):** 1.798109079 to 3.801380313
-- **EEG Rest (µV):** 5.000450261 to 50.18350703
-- **EEG Flexion (µV):** 60.04197402 to 86.95405508
-- **EEG Extension (µV):** 69.82874585 to 81.92500559
-
-### _**Benefits for Doctors:**_
-
-1. _**Objective Pain Assessment:**_
-   - **Consistent Monitoring:** By using EMG and EEG sensors to continuously monitor muscle and brain activity, the model provides consistent and objective assessments of the patient's pain levels. This removes subjectivity from the process and allows for more accurate tracking of the patient's progress.
-   - **Real-Time Feedback:** Doctors can get real-time feedback on the patient’s pain levels during rehabilitation exercises. This allows for immediate adjustments to the rehabilitation program to ensure that exercises are beneficial and not causing excessive pain or stress.
-
-2. _**Personalized Rehabilitation Programs:**_
-   - **Tailored Interventions:** The data collected and analyzed by the model can help doctors create personalized rehabilitation programs. By understanding the specific pain thresholds and responses of each patient, doctors can design exercises that are both effective and comfortable.
-   - **Adaptive Therapy:** The model can help identify which exercises cause pain and which ones are more tolerable. This information can be used to adapt the rehabilitation program dynamically, ensuring that the patient remains engaged and motivated without experiencing undue pain.
-
-
