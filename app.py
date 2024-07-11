@@ -92,22 +92,4 @@ if uploaded_file:
             st.write(patient_data)
 
 st.sidebar.header("About")
-st.sidebar.info("This model will be running real-time very soon! Stay tuned 
-
-### _**NO PAIN RANGES:**_
-
-- **EMG Rest (µV):** 0.497758633 to 0.501794274
-- **EMG Flexion (µV):** 0.8001190203 to 1.999715615
-- **EMG Extension (µV):** 0.798152212 to 0.803510512
-- **EEG Rest (µV):** 2.02509753 to 4.089443689
-- **EEG Flexion (µV):** 19.87502164 to 50.08350199
-- **EEG Extension (µV):** 49.84258228 to 50.17559819
-
-### _**PAIN RANGES:**_
-
-- **EMG Rest (µV):** 0.7501276039 to 1.501316884
-- **EMG Flexion (µV):** 0.997254081 to 3.998466906
-- **EMG Extension (µV):** 1.798109079 to 3.801380313
-- **EEG Rest (µV):** 5.000450261 to 50.18350703
-- **EEG Flexion (µV):** 60.04197402 to 86.95405508
-- **EEG Extension (µV):** 69.82874585 to 81.92500559 ")
+st.sidebar.info("This model will be running real-time very soon! Stay tuned")
