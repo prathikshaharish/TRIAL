@@ -92,7 +92,7 @@ if uploaded_file:
             st.write(patient_data)
 
 st.sidebar.header("About")
-st.sidebar.info("This model will be running real-time very soon! Stay tuned / 
+st.sidebar.info("This model will be running real-time very soon! Stay tuned 
 
 ### _**NO PAIN RANGES:**_
 
